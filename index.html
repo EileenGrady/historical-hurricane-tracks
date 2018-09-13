@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset=utf-8 />
-	<title>Historical Hurrican Tracks</title>
+	<title>Historical Hurricane Tracks</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
@@ -77,6 +77,8 @@
 	</section>
 
   <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src='data/historical-hurricane-tracks.geojson'></script>
 
 <script>
 
@@ -86,12 +88,95 @@
     });
 
     var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-      	subdomains: 'abcd',
-      	maxZoom: 19
-      });
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+});
 
       tiles.addTo(map);
+
+      // var layerInfo = {
+      //   categoryOneLayer: {
+      //     category: "H1",
+      //     color: '#fee08b',
+      //     weight: '1'
+      //   },
+      //   categoryTwoLayer: {
+      //     category: "H2",
+      //     color: '#fdae61',
+      //     weight: '1.2'
+      //   },
+      //   categoryThreeLayer: {
+      //     category: "H3",
+      //     color: '#f46d43',
+      //     weight: '1.4'
+      //   },
+      //   categoryFourLayer: {
+      //     category: "H4",
+      //     color: '#d53e4f',
+      //     weight: '1.6'
+      //   },
+      //   categoryFiveLayer: {
+      //     category: "H5",
+      //     color: '#9e0142',
+      //     weight: '1.8'
+      //   }
+      // };
+
+
+      $.getJSON("data/historical-hurricane-tracks.geojson", function(data) {
+        var hurricaneLayer = L.geoJson(data, {
+          style: function(feature) {
+            return {
+              color: 'orange',
+              weight: 1
+            }
+          }
+        }).addTo(map)
+
+        drawMap(hurricaneLayer)
+
+      });
+
+      function drawMap(hurricaneLayer) {
+        hurricaneLayer.eachLayer(function(layer) {
+          layer.setStyle({
+            color: getColor(layer.feature.properties.CAT),
+            weight: getWeight(layer.feature.properties.CAT)
+          })
+        })
+      }
+
+      function getColor(c) {
+        if (c == 'H1') {
+          return '#ffffbf'
+        } else if (c == 'H2') {
+          return '#fee08b'
+        } else if (c == 'H3') {
+          return '#fdae61'
+        } else if (c == 'H4') {
+          return '#f46d43'
+        } else if (c == 'H5') {
+          return '#d53e4f'
+        }
+      }
+
+      function getWeight(c) {
+        if (c == 'H1') {
+          return 1
+        } else if (c == 'H2') {
+          return 1.2
+        } else if (c == 'H3') {
+          return 1.4
+        } else if (c == 'H4') {
+          return 1.6
+        } else if (c == 'H5') {
+          return 1.8
+        }
+      }
+
+
+
 
 </script>
 
