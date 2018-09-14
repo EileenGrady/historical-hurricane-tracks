@@ -20,7 +20,6 @@
 			margin-top: 0;
 			top: 10px;
 			left: 15px;
-      width: 280px;
 			font-size: 2em;
 			font-family: serif;
 			letter-spacing: .04em;
@@ -42,7 +41,7 @@
 		}
 		#about {
 			position: absolute;
-			top: 120px;
+			top: 80px;
 			left: 15px;
 			width: 280px;
 			padding: 0 15px;
@@ -67,7 +66,7 @@
 
 <body>
 
-	<h1>Awesome Map Title</h1>
+	<h1>Historical Tropical Storm Tracks</h1>
 
 	<div id='map'></div>
 
@@ -95,75 +94,119 @@
 
       tiles.addTo(map);
 
-      var layerInfo = {
+      var hurricaneInfo = {
         categoryOneLayer: {
           category: "H1",
-          color: '#fee08b',
+          color: '#FFFFCC',
           weight: '2.8'
         },
         categoryTwoLayer: {
           category: "H2",
-          color: '#fdae61',
+          color: '#FFE775',
           weight: '3'
         },
         categoryThreeLayer: {
           category: "H3",
-          color: '#f46d43',
+          color: '#FFC140',
           weight: '3.2'
         },
         categoryFourLayer: {
           category: "H4",
-          color: '#d53e4f',
+          color: '#FF8F20',
           weight: '3.4'
         },
         categoryFiveLayer: {
           category: "H5",
-          color: '#9e0142',
+          color: '#ff4d4d',
           weight: '3.6'
         }
       };
 
+      var stormInfo = {
+        tropicalStormLayer: {
+          category: "TS",
+          color: '#00FAF4',
+          weight: '2.6'
+        },
+        tropicalDepressionLayer: {
+          category: "TD",
+          color: '#5EBAFF',
+          weight: '2.4'
+        }
+      };
+
+      var hurricaneRequest = $.getJSON("data/historic-hurricane-tracks.geojson");
+      var stormRequest = $.getJSON("data/historic-tropic-storms.geojson");
+
+      $.when(hurricaneRequest, stormRequest)
+        .done(function(hurricaneData, stormData) {
+          drawMap(hurricaneData[0], stormData[0])
+        });
+
       var hurricaneLayers = {};
 
-      $.getJSON("data/historical-hurricane-tracks.geojson", function(data) {
+      var stormLayers = {};
 
-        for(var layer in layerInfo) {
-        hurricaneLayers[layer] = L.geoJson(data, {
-          filter: function(feature) {
-            if(feature.properties.CAT == layerInfo[layer].category) {
-              return feature
-            }
-          },
-          style: function(feature) {
-            return {
-              color: layerInfo[layer].color,
-              weight: layerInfo[layer].weight
-            }
-          },
-          onEachFeature: function(feature, layer) {
-            var props = feature.properties;
-            var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + props.NAME + " was a category " + props.CAT + " with a speed of " + props.WIND_KTS + " knots.";
-            layer.bindPopup(popup);
+      function drawMap(hurricaneData, stormData) {
+
+      for(var layer in stormInfo) {
+      stormLayers[layer] = L.geoJson(stormData, {
+        filter: function(feature) {
+          if(feature.properties.CAT == stormInfo[layer].category) {
+            return feature
           }
-        }).addTo(map)
+        },
+        style: function(feature) {
+          return {
+            color: stormInfo[layer].color,
+            weight: stormInfo[layer].weight
+          }
+        },
+        onEachFeature: function(feature, layer) {
+          var props = feature.properties;
+          var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + props.NAME + " was a category " + props.CAT + " with a speed of " + props.WIND_KTS + " knots.";
+          layer.bindPopup(popup);
+        }
+      }).addTo(map)
+    };
 
-}});
-
-      console.log(hurricaneLayers);
-
-
-      var categoryLayer = {
-        "<b style= 'color:#d53e4f'>Category Five</b>": hurricaneLayers.categoryFiveLayer,
-        "<b style= 'color:#f46d43'>Category Four</b>": hurricaneLayers.categoryFourLayer,
-        "<b style= 'color:#fdae61'>Category Three</b>": hurricaneLayers.categoryThreeLayer,
-        "<b style= 'color:#fee08b'>Category Two</b>": hurricaneLayers.categoryTwoLayer,
-        "<b style= 'color:#ffffbf'>Category One</b>": hurricaneLayers.categoryOneLayer
+    for(var layer in hurricaneInfo) {
+    hurricaneLayers[layer] = L.geoJson(hurricaneData, {
+      filter: function(feature) {
+        if(feature.properties.CAT == hurricaneInfo[layer].category) {
+          return feature
+        }
+      },
+      style: function(feature) {
+        return {
+          color: hurricaneInfo[layer].color,
+          weight: hurricaneInfo[layer].weight
+        }
+      },
+      onEachFeature: function(feature, layer) {
+        var props = feature.properties;
+        var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + props.NAME + " was a category " + props.CAT + " with a speed of " + props.WIND_KTS + " knots.";
+        layer.bindPopup(popup);
       }
+    }).addTo(map)
+  };
+  }
 
-      L.control.layers(null, categoryLayer, {
-        collapsed: false,
-        position: 'topright'
-      }).addTo(map);
+
+
+
+      // var categoryLayer = {
+      //   "<b style= 'color:#d53e4f'>Category Five</b>": hurricaneLayers.categoryFiveLayer,
+      //   "<b style= 'color:#f46d43'>Category Four</b>": hurricaneLayers.categoryFourLayer,
+      //   "<b style= 'color:#fdae61'>Category Three</b>": hurricaneLayers.categoryThreeLayer,
+      //   "<b style= 'color:#fee08b'>Category Two</b>": hurricaneLayers.categoryTwoLayer,
+      //   "<b style= 'color:#ffffbf'>Category One</b>": hurricaneLayers.categoryOneLayer
+      // };
+
+      // L.control.layers(null, categoryLayer, {
+      //   collapsed: false,
+      //   position: 'topright'
+      // }).addTo(map);
 
 </script>
 
