@@ -20,6 +20,7 @@
 			margin-top: 0;
 			top: 10px;
 			left: 15px;
+      width: 280px;
 			font-size: 2em;
 			font-family: serif;
 			letter-spacing: .04em;
@@ -41,7 +42,7 @@
 		}
 		#about {
 			position: absolute;
-			bottom: 20px;
+			top: 120px;
 			left: 15px;
 			width: 280px;
 			padding: 0 15px;
@@ -78,7 +79,6 @@
 
   <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src='data/historical-hurricane-tracks.geojson'></script>
 
 <script>
 
@@ -95,88 +95,75 @@
 
       tiles.addTo(map);
 
-      // var layerInfo = {
-      //   categoryOneLayer: {
-      //     category: "H1",
-      //     color: '#fee08b',
-      //     weight: '1'
-      //   },
-      //   categoryTwoLayer: {
-      //     category: "H2",
-      //     color: '#fdae61',
-      //     weight: '1.2'
-      //   },
-      //   categoryThreeLayer: {
-      //     category: "H3",
-      //     color: '#f46d43',
-      //     weight: '1.4'
-      //   },
-      //   categoryFourLayer: {
-      //     category: "H4",
-      //     color: '#d53e4f',
-      //     weight: '1.6'
-      //   },
-      //   categoryFiveLayer: {
-      //     category: "H5",
-      //     color: '#9e0142',
-      //     weight: '1.8'
-      //   }
-      // };
+      var layerInfo = {
+        categoryOneLayer: {
+          category: "H1",
+          color: '#fee08b',
+          weight: '2.8'
+        },
+        categoryTwoLayer: {
+          category: "H2",
+          color: '#fdae61',
+          weight: '3'
+        },
+        categoryThreeLayer: {
+          category: "H3",
+          color: '#f46d43',
+          weight: '3.2'
+        },
+        categoryFourLayer: {
+          category: "H4",
+          color: '#d53e4f',
+          weight: '3.4'
+        },
+        categoryFiveLayer: {
+          category: "H5",
+          color: '#9e0142',
+          weight: '3.6'
+        }
+      };
 
+      var hurricaneLayers = {};
 
       $.getJSON("data/historical-hurricane-tracks.geojson", function(data) {
-        var hurricaneLayer = L.geoJson(data, {
+
+        for(var layer in layerInfo) {
+        hurricaneLayers[layer] = L.geoJson(data, {
+          filter: function(feature) {
+            if(feature.properties.CAT == layerInfo[layer].category) {
+              return feature
+            }
+          },
           style: function(feature) {
             return {
-              color: 'orange',
-              weight: 1
+              color: layerInfo[layer].color,
+              weight: layerInfo[layer].weight
             }
+          },
+          onEachFeature: function(feature, layer) {
+            var props = feature.properties;
+            var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + props.NAME + " was a category " + props.CAT + " with a speed of " + props.WIND_KTS + " knots.";
+            layer.bindPopup(popup);
           }
         }).addTo(map)
 
-        drawMap(hurricaneLayer)
+}});
 
-      });
+      console.log(hurricaneLayers);
 
-      function drawMap(hurricaneLayer) {
-        hurricaneLayer.eachLayer(function(layer) {
-          layer.setStyle({
-            color: getColor(layer.feature.properties.CAT),
-            weight: getWeight(layer.feature.properties.CAT)
-          })
-        })
+
+      var categoryLayer = {
+        "<b style= 'color:#d53e4f'>Category Five</b>": hurricaneLayers.categoryFiveLayer,
+        "<b style= 'color:#f46d43'>Category Four</b>": hurricaneLayers.categoryFourLayer,
+        "<b style= 'color:#fdae61'>Category Three</b>": hurricaneLayers.categoryThreeLayer,
+        "<b style= 'color:#fee08b'>Category Two</b>": hurricaneLayers.categoryTwoLayer,
+        "<b style= 'color:#ffffbf'>Category One</b>": hurricaneLayers.categoryOneLayer
       }
 
-      function getColor(c) {
-        if (c == 'H1') {
-          return '#ffffbf'
-        } else if (c == 'H2') {
-          return '#fee08b'
-        } else if (c == 'H3') {
-          return '#fdae61'
-        } else if (c == 'H4') {
-          return '#f46d43'
-        } else if (c == 'H5') {
-          return '#d53e4f'
-        }
-      }
-
-      function getWeight(c) {
-        if (c == 'H1') {
-          return 1
-        } else if (c == 'H2') {
-          return 1.2
-        } else if (c == 'H3') {
-          return 1.4
-        } else if (c == 'H4') {
-          return 1.6
-        } else if (c == 'H5') {
-          return 1.8
-        }
-      }
-
-
-
+      L.control.layers(null, categoryLayer, {
+        collapsed: false,
+        position: 'topright'
+      }).addTo(map);
 
 </script>
 
