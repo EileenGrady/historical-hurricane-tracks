@@ -98,6 +98,11 @@
       clear: both;
     }
 
+		.leaflet-tooltip {
+			width: 260px;
+			white-space: pre-wrap;
+		}
+
 
 	</style>
 </head>
@@ -134,57 +139,60 @@
 
 
 //create object to hold properties for each layer that will be created, based on storm severity
-      var layerInfo = {
+      var hurricaneInfo = {
         categoryFiveLayer: {
           category: "H5",
           color: '#ff4d4d',
-          weight: '3.6',
+          weight: 3.6,
 					name: "Category Five",
 					windSpeed: "≥ 157 mph"
         },
 				categoryFourLayer: {
 					category: "H4",
 					color: '#FF8F20',
-					weight: '3.4',
+					weight: 3.4,
 					name: "Category Four",
 					windSpeed: "130–156 mph"
 				},
 				categoryThreeLayer: {
           category: "H3",
           color: '#FFC140',
-          weight: '3.2',
+          weight: 3.2,
 					name: "Category Three",
 					windSpeed: "111–129 mph"
         },
 				categoryTwoLayer: {
 					category: "H2",
 					color: '#FFE775',
-					weight: '3',
+					weight: 3,
 					name: "Category Two",
 					windSpeed: "96–110 mph"
 				},
 				categoryOneLayer: {
 					category: "H1",
 					color: '#FFFFCC',
-					weight: '2.8',
+					weight: 2.8,
 					name: "Category One",
 					windSpeed: "74–95 mph"
-				},
+				}
+			};
+			
+			var stormInfo = {
         tropicalStormLayer: {
           category: "TS",
           color: '#00FAF4',
-          weight: '2.6',
+          weight: 2.6,
 					name: "Tropical Storm",
 					windSpeed: "39–73 mph"
         },
         tropicalDepressionLayer: {
           category: "TD",
           color: '#5EBAFF',
-          weight: '2.4',
+          weight: 2.4,
 					name: "Tropical Depression",
 					windSpeed: "≤ 38 mph"
         }
-      };
+			}
 
 //Define AJAX request for each data source, hurricanes and storms
       var hurricaneRequest = $.getJSON("data/historic-hurricane-tracks.geojson");
@@ -203,19 +211,19 @@
     	function drawMap(hurricaneData, stormData) {
 
 //loop through each layer in layerInfo to start populating stormsLayer using the stormData file (tropical storms and depressions)
-      for(var layer in layerInfo) {
-      stormLayers[layer] = L.geoJson(stormData, {
-				//filter returns only one category of storm at a time to build layers
-				filter: function(feature) {
-          if(feature.properties.CAT == layerInfo[layer].category) {
-            return feature
-          }
+      for(var layer in stormInfo) {
+     	 	stormLayers[layer] = L.geoJson(stormData, {
+					//filter returns only one category of storm at a time to build layers
+					filter: function(feature) {
+						if(feature.properties.CAT == stormInfo[layer].category) {
+							return feature
+						}
         },
 				//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
 				style: function(feature) {
           return {
-            color: layerInfo[layer].color,
-            weight: layerInfo[layer].weight
+            color: stormInfo[layer].color,
+            weight: stormInfo[layer].weight
           }
         },
 				onEachFeature: function(feature, layer) {
@@ -224,26 +232,26 @@
           var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
           var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
 					//build popup content using variables defined above
-					var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + formatName + " was categorized as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.";
-          layer.bindPopup(popup);
+					var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <b>" + formatName + "</b> was categorized as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.";
+					layer.bindTooltip(popup);
         }
       }).addTo(map)
     };
 
 		//loop through each layer in layerInfo to continue populating stormsLayer using the hurricaneData file (category 1-5 hurricanes)
-	  for(var layer in layerInfo) {
+	  for(var layer in hurricaneInfo) {
     stormLayers[layer] = L.geoJson(hurricaneData, {
 			//filter returns only one category of storm at a time to build layers
 			filter: function(feature) {
-        if(feature.properties.CAT == layerInfo[layer].category) {
+        if(feature.properties.CAT == hurricaneInfo[layer].category) {
           return feature
         }
       },
 			//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
       style: function(feature) {
         return {
-          color: layerInfo[layer].color,
-          weight: layerInfo[layer].weight
+          color: hurricaneInfo[layer].color,
+          weight: hurricaneInfo[layer].weight
         }
       },
       onEachFeature: function(feature, layer) {
@@ -253,12 +261,14 @@
         var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
 				//build popup content using variables defined above
 				var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + formatName + " was a category " + formatCategory + " hurricane with wind speeds of " + windSpeed + " mph.";
-        layer.bindPopup(popup);
+        layer.bindTooltip(popup);
       }
     }).addTo(map)
   };
 
-	drawLegend();
+		drawLegend();
+
+		addClickHanders(stormLayers);
 
   }
 
@@ -306,39 +316,96 @@
 	        var div = L.DomUtil.create('div', 'legend');
 	        div.innerHTML = "<h3>Storm Classification by Wind Speed</h3>";
 
-	        for (var type in layerInfo) {
+	        for (var type in hurricaneInfo) {
 
-	          var color = layerInfo[type].color
+	          var color = hurricaneInfo[type].color
 
-						var name = layerInfo[type].name
+						var name = hurricaneInfo[type].name
 
-						var windSpeed = layerInfo[type].windSpeed
+						var windSpeed = hurricaneInfo[type].windSpeed
 
 	          div.innerHTML +=
 	            '<span style="background:' + color + '"></span> ' +
 	            '<label>' + name + ", " + windSpeed + '</label>';
-	        }
+					}
+					
+					for (var type in stormInfo) {
+
+						var color = stormInfo[type].color
+
+						var name = stormInfo[type].name
+
+						var windSpeed = stormInfo[type].windSpeed
+
+						div.innerHTML +=
+							'<span style="background:' + color + '"></span> ' +
+							'<label>' + name + ", " + windSpeed + '</label>';
+						}
 	        return div
 	      };
 	      legend.addTo(map);
 	    }
 
 			//cannot figure out how to define a click event on a layer
-				map.on('click', function(event) {
-				for (var type in stormLayers) {
-					stormLayers[type].eachLayer(function(layer) {
-						if (layer.BTID == this.BTID) {
-							layer.setStyle({
-								stroke: true
-							});
+			// 	map.on('click', function(event) {
+			// 	for (var type in stormLayers) {
+			// 		stormLayers[type].eachLayer(function(layer) {
+			// 			if (layer.BTID == this.BTID) {
+			// 				layer.setStyle({
+			// 					stroke: true
+			// 				});
+			// 			} else {
+			// 				layer.setStyle({
+			// 					stroke: false
+			// 				});
+			// 			}
+			// 		});
+			// 	};
+			// });
+
+			function addClickHanders(stormLayers) {
+				
+				for(var layer in stormLayers) {
+					stormLayers[layer].eachLayer(function(l) {
+						l.on('click', function(evt) {
+							highlightSelected(stormLayers, this);
+						});
+						// l.on('mouseout', function(e) {
+						// 	resetStyles(stormLayers);
+						// });
+					})
+				}
+			}
+
+			function highlightSelected(stormLayers, layer) {
+				// get the code from the current select track
+				var highlightCode = layer.feature.properties.BTID;
+				
+				// loop through all layerGroups
+				for(var l in stormLayers) {
+
+					stormLayers[l].eachLayer(function(l2) {
+						if(l2.feature.properties.BTID === highlightCode) {
+							l2.setStyle({
+								opacity: 1
+							}).bringToFront();
 						} else {
-							layer.setStyle({
-								stroke: false
+							l2.setStyle({
+								opacity: 0
 							});
 						}
-					});
-				};
-			});
+					})
+
+				}
+			}
+
+			function resetStyles(stormLayers) {
+				for(var l in stormLayers) {
+					stormLayers[l].setStyle({
+						opacity: 1
+					})
+				}
+			}
 
 
 
