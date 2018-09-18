@@ -185,7 +185,7 @@
 
       var stormLayers = {};
 
-      function drawMap(hurricaneData, stormData) {
+    	function drawMap(hurricaneData, stormData) {
 
       for(var layer in layerInfo) {
       stormLayers[layer] = L.geoJson(stormData, {
@@ -251,6 +251,8 @@
 
 	drawLegend();
 
+	clickEvent(hurricaneLayers);
+
   }
 
   function getName(name) {
@@ -309,6 +311,40 @@
 	      };
 	      legend.addTo(map);
 	    }
+
+			function clickEvent(hurricaneLayers) {
+				map.on('popupopen', function(event) {
+				for (var type in hurricaneLayers) {
+					hurricaneLayers[type].eachLayer(function(layer) {
+						if (layer.BTID == this.BTID) {
+							layer.setStyle({
+								stroke: true
+							});
+						} else {
+							layer.setStyle({
+								stroke: false
+							});
+						}
+					});
+				};
+
+				for (var type in stormLayers) {
+					stormLayers[type].eachLayer(function(layer) {
+						if (layer.BTID == this.BTID) {
+							layer.setStyle({
+								stroke: true
+							});
+						} else {
+							layer.setStyle({
+								stroke: false
+							});
+						}
+					});
+				}
+			});
+		}
+
+		console.log(hurricaneLayers);
 
 </script>
 
