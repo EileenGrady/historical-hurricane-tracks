@@ -16,6 +16,7 @@
 			font-family:'Quattrocento', Serif;
 			color: #3d3d3d;
 		}
+
 		h1 {
 			position: absolute;
 			margin-top: 0;
@@ -31,10 +32,12 @@
 			border-radius: 3px;
 			z-index: 800;
 		}
+
 		h2 {
 			font-family: 'Oswald', Sans-Serif;
 			letter-spacing: .04em;
 		}
+
 		#map {
 			position: absolute;
 			top: 0;
@@ -98,9 +101,15 @@
       clear: both;
     }
 
-		.leaflet-tooltip {
+		.leaflet-popup {
 			width: 260px;
 			white-space: pre-wrap;
+		}
+
+		.leaflet-popup-content p {
+			margin: 3px 0;
+			font-family:'Quattrocento', Serif;
+			font-size: 1.1em;
 		}
 
 	</style>
@@ -221,7 +230,7 @@
 				style: function(feature) {
           return {
             color: stormInfo[layer].color,
-            weight: stormInfo[layer].weight
+            weight: 2.5
           }
         },
 				onEachFeature: function(feature, layer) {
@@ -230,8 +239,8 @@
           var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
           var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
 					//build popup content using variables defined above
-					var tooltip = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <b>" + formatName + "</b> was categorized as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.";
-					layer.bindTooltip(tooltip);
+					var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was categorized as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.</p>";
+					layer.bindPopup(popup);
         }
       }).addTo(map)
     };
@@ -249,7 +258,7 @@
       style: function(feature) {
         return {
           color: hurricaneInfo[layer].color,
-          weight: hurricaneInfo[layer].weight
+          weight: 2.5
         }
       },
       onEachFeature: function(feature, layer) {
@@ -258,8 +267,8 @@
         var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
         var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
 				//build popup content using variables defined above
-				var tooltip = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + formatName + " was a category " + formatCategory + " hurricane with wind speeds of " + windSpeed + " mph.";
-        layer.bindTooltip(tooltip);
+				var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was a category " + formatCategory + " hurricane with wind speeds of " + windSpeed + " mph.</p>";
+        layer.bindPopup(popup);
       }
     }).addTo(map)
   };
@@ -366,7 +375,8 @@
 					stormLayers[l].eachLayer(function(l2) {
 						if(l2.feature.properties.BTID === highlightCode) {
 							l2.setStyle({
-								stroke: true
+								stroke: true,
+								weight: 6
 							}).bringToFront();
 						} else {
 							l2.setStyle({
@@ -387,7 +397,8 @@
 			function resetMap(stormLayers) {
 				for(var l in stormLayers) {
 					stormLayers[l].setStyle({
-						stroke: true
+						stroke: true,
+						weight: 2.5
 					})
 				}
 			}
