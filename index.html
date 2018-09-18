@@ -296,11 +296,11 @@
 	//
 			function drawLegend() {
 	      var legend = L.control({
-	        position: 'bottomright'
+	        position: 'topright'
 	      });
 	      legend.onAdd = function() {
 	        var div = L.DomUtil.create('div', 'legend');
-	        div.innerHTML = "<h3>Tropical Storm Categories</h3>";
+	        div.innerHTML = "<h3>Tropical Storm Classification</h3>";
 
 	        for (var type in layerInfo) {
 
