@@ -61,6 +61,40 @@
 		a:hover {
 			text-decoration: underline;
 		}
+
+		.legend {
+      padding: 6px 8px;
+      font-size: 1em;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    .legend h3 {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #001323;
+      margin: 0 0 10px 0;
+    }
+
+    .legend span {
+      width: 20px;
+      height: 20px;
+      float: left;
+      margin: 0 10px 4px 0;
+    }
+
+    .legend label {
+      font-size: 1.1em;
+    }
+
+    .legend label:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+
 	</style>
 </head>
 
@@ -95,40 +129,47 @@
       tiles.addTo(map);
 
       var layerInfo = {
-        categoryOneLayer: {
-          category: "H1",
-          color: '#FFFFCC',
-          weight: '2.8'
-        },
-        categoryTwoLayer: {
-          category: "H2",
-          color: '#FFE775',
-          weight: '3'
-        },
-        categoryThreeLayer: {
-          category: "H3",
-          color: '#FFC140',
-          weight: '3.2'
-        },
-        categoryFourLayer: {
-          category: "H4",
-          color: '#FF8F20',
-          weight: '3.4'
-        },
         categoryFiveLayer: {
           category: "H5",
           color: '#ff4d4d',
-          weight: '3.6'
+          weight: '3.6',
+					name: "Category Five"
         },
+				categoryFourLayer: {
+					category: "H4",
+					color: '#FF8F20',
+					weight: '3.4',
+					name: "Category Four"
+				},
+				categoryThreeLayer: {
+          category: "H3",
+          color: '#FFC140',
+          weight: '3.2',
+					name: "Category Three"
+        },
+				categoryTwoLayer: {
+					category: "H2",
+					color: '#FFE775',
+					weight: '3',
+					name: "Category Two"
+				},
+				categoryOneLayer: {
+					category: "H1",
+					color: '#FFFFCC',
+					weight: '2.8',
+					name: "Category One"
+				},
         tropicalStormLayer: {
           category: "TS",
           color: '#00FAF4',
-          weight: '2.6'
+          weight: '2.6',
+					name: "Tropical Storm"
         },
         tropicalDepressionLayer: {
           category: "TD",
           color: '#5EBAFF',
-          weight: '2.4'
+          weight: '2.4',
+					name: "Tropical Depression"
         }
       };
 
@@ -193,6 +234,23 @@
       }
     }).addTo(map)
   };
+
+	// var categoryLayer = {
+	// 	"<b style= 'color:#ff4d4d'>Category Five: ≥ 157 mph</b>": hurricaneLayers.categoryFiveLayer,
+	// 	"<b style= 'color:#FF8F20'>Category Four: 130–156 mph</b>": hurricaneLayers.categoryFourLayer,
+	// 	"<b style= 'color:#FFC140'>Category Three: 111–129 mph</b>": hurricaneLayers.categoryThreeLayer,
+	// 	"<b style= 'color:#FFE775; text-shadow: 0px 0px 1px #000000;'>Category Two: 96–110 mph</b>": hurricaneLayers.categoryTwoLayer,
+	// 	"<b style= 'color:#FFFFCC; text-shadow: 0px 0px 1px #333;'>Category One: 74–95 mph</b>": hurricaneLayers.categoryOneLayer,
+	// 	"<b style= 'color:#00FAF4'>Tropical Storm: 39–73 mph</b>": stormLayers.tropicalStormLayer,
+	// 	"<b style= 'color:#5EBAFF'>Tropical Depression: ≤ 38 mph</b>": stormLayers.tropicalDepressionLayer
+	// };
+
+	// var legend = L.control.layers(null, categoryLayer, {
+	// 	collapsed: false,
+	// }).addTo(map);
+
+	drawLegend();
+
   }
 
   function getName(name) {
@@ -221,25 +279,36 @@
     }
   }
 
+	var categoryArray = ["Category Five", "Category Four", "Category Three", "Category Two", "Category One", "Tropical Storm", "Tropical Depression"]
+
   function getMPH(kts) {
     var mph = kts*1.15
     return mph.toLocaleString();
   }
 
-      var categoryLayer = {
-        "<b style= 'color:#d53e4f'>Category Five: ≥ 157 mph</b>": hurricaneLayers.categoryFiveLayer,
-        "<b style= 'color:#f46d43'>Category Four: 130–156 mph</b>": hurricaneLayers.categoryFourLayer,
-        "<b style= 'color:#fdae61'>Category Three: 111–129 mph</b>": hurricaneLayers.categoryThreeLayer,
-        "<b style= 'color:#fee08b'>Category Two: 96–110 mph</b>": hurricaneLayers.categoryTwoLayer,
-        "<b style= 'color:#ffffbf'>Category One: 74–95 mph</b>": hurricaneLayers.categoryOneLayer,
-        "<b style= 'color:#ffffbf'>Tropical Storm: 39–73 mph</b>": hurricaneLayers.tropicalStormLayer,
-        "<b style= 'color:#ffffbf'>Tropical Depression: ≤ 38 mph</b>": hurricaneLayers.tropicalDepressionLayer
-      };
+			function drawLegend() {
+	      var legend = L.control.layers({
+	        position: 'bottomright'
+	      });
+	      legend.onAdd = function() {
+	        var div = L.DomUtil.create('div', 'legend');
+	        div.innerHTML = "<h3>Tropical Story Categories</h3>";
 
-      L.control.layers(null, categoryLayer, {
-        collapsed: false,
-        position: 'topright'
-      }).addTo(map);
+	        for (var type in layerInfo) {
+
+	          var color = layerInfo[type].color
+
+						var name = layerInfo[type].name
+
+	          div.innerHTML +=
+	            '<span style="background:' + color + '"></span> ' +
+	            '<label>' + name + '</label>';
+	        }
+
+	        return div
+	      };
+	      legend.addTo(map);
+	    }
 
 </script>
 
