@@ -128,96 +128,114 @@
 
       tiles.addTo(map);
 
+
+//create object to hold properties for each layer that will be created, based on storm severity
       var layerInfo = {
         categoryFiveLayer: {
           category: "H5",
           color: '#ff4d4d',
           weight: '3.6',
-					name: "Category Five"
+					name: "Category Five",
+					windSpeed: "≥ 157 mph"
         },
 				categoryFourLayer: {
 					category: "H4",
 					color: '#FF8F20',
 					weight: '3.4',
-					name: "Category Four"
+					name: "Category Four",
+					windSpeed: "130–156 mph"
 				},
 				categoryThreeLayer: {
           category: "H3",
           color: '#FFC140',
           weight: '3.2',
-					name: "Category Three"
+					name: "Category Three",
+					windSpeed: "111–129 mph"
         },
 				categoryTwoLayer: {
 					category: "H2",
 					color: '#FFE775',
 					weight: '3',
-					name: "Category Two"
+					name: "Category Two",
+					windSpeed: "96–110 mph"
 				},
 				categoryOneLayer: {
 					category: "H1",
 					color: '#FFFFCC',
 					weight: '2.8',
-					name: "Category One"
+					name: "Category One",
+					windSpeed: "74–95 mph"
 				},
         tropicalStormLayer: {
           category: "TS",
           color: '#00FAF4',
           weight: '2.6',
-					name: "Tropical Storm"
+					name: "Tropical Storm",
+					windSpeed: "39–73 mph"
         },
         tropicalDepressionLayer: {
           category: "TD",
           color: '#5EBAFF',
           weight: '2.4',
-					name: "Tropical Depression"
+					name: "Tropical Depression",
+					windSpeed: "≤ 38 mph"
         }
       };
 
+//Define AJAX request for each data source, hurricanes and storms
       var hurricaneRequest = $.getJSON("data/historic-hurricane-tracks.geojson");
       var stormRequest = $.getJSON("data/historic-tropic-storms.geojson");
 
+//method that calls drawMap function once both data sources are loaded
       $.when(hurricaneRequest, stormRequest)
         .done(function(hurricaneData, stormData) {
           drawMap(hurricaneData[0], stormData[0])
         });
 
-      var hurricaneLayers = {};
-
+//empty object to hold all the storm layers
       var stormLayers = {};
 
+//define function that will draw map (create geojson layer) once data is loaded
     	function drawMap(hurricaneData, stormData) {
 
+//loop through each layer in layerInfo to start populating stormsLayer using the stormData file (tropical storms and depressions)
       for(var layer in layerInfo) {
       stormLayers[layer] = L.geoJson(stormData, {
-        filter: function(feature) {
+				//filter returns only one category of storm at a time to build layers
+				filter: function(feature) {
           if(feature.properties.CAT == layerInfo[layer].category) {
             return feature
           }
         },
-        style: function(feature) {
+				//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
+				style: function(feature) {
           return {
             color: layerInfo[layer].color,
             weight: layerInfo[layer].weight
           }
         },
-        onEachFeature: function(feature, layer) {
-          var props = feature.properties;
-          var formatName = getName(props.NAME);
-          var formatCategory = getCategory(props.CAT);
-          var windSpeed = getMPH(props.WIND_KTS);
-          var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + formatName + " was categorized as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.";
+				onEachFeature: function(feature, layer) {
+          var props = feature.properties; //shorthand notation to use when building popup content
+          var formatName = getName(props.NAME); //call function to format name, original name format is in all caps
+          var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
+          var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
+					//build popup content using variables defined above
+					var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + formatName + " was categorized as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.";
           layer.bindPopup(popup);
         }
       }).addTo(map)
     };
 
-    for(var layer in layerInfo) {
-    hurricaneLayers[layer] = L.geoJson(hurricaneData, {
-      filter: function(feature) {
+		//loop through each layer in layerInfo to continue populating stormsLayer using the hurricaneData file (category 1-5 hurricanes)
+	  for(var layer in layerInfo) {
+    stormLayers[layer] = L.geoJson(hurricaneData, {
+			//filter returns only one category of storm at a time to build layers
+			filter: function(feature) {
         if(feature.properties.CAT == layerInfo[layer].category) {
           return feature
         }
       },
+			//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
       style: function(feature) {
         return {
           color: layerInfo[layer].color,
@@ -225,36 +243,23 @@
         }
       },
       onEachFeature: function(feature, layer) {
-        var props = feature.properties;
-        var formatName = getName(props.NAME);
-        var formatCategory = getCategory(props.CAT);
-        var windSpeed = getMPH(props.WIND_KTS);
-        var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + formatName + " was a category " + formatCategory + " hurricane with wind speeds of " + windSpeed + " mph.";
+        var props = feature.properties; //shorthand notation to use when building popup content
+        var formatName = getName(props.NAME); //call function to format name, original name format is in all cap
+        var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
+        var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
+				//build popup content using variables defined above
+				var popup = "On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", " + formatName + " was a category " + formatCategory + " hurricane with wind speeds of " + windSpeed + " mph.";
         layer.bindPopup(popup);
       }
     }).addTo(map)
   };
 
-	// var categoryLayer = {
-	// 	"<b style= 'color:#ff4d4d'>Category Five: ≥ 157 mph</b>": hurricaneLayers.categoryFiveLayer,
-	// 	"<b style= 'color:#FF8F20'>Category Four: 130–156 mph</b>": hurricaneLayers.categoryFourLayer,
-	// 	"<b style= 'color:#FFC140'>Category Three: 111–129 mph</b>": hurricaneLayers.categoryThreeLayer,
-	// 	"<b style= 'color:#FFE775; text-shadow: 0px 0px 1px #000000;'>Category Two: 96–110 mph</b>": hurricaneLayers.categoryTwoLayer,
-	// 	"<b style= 'color:#FFFFCC; text-shadow: 0px 0px 1px #333;'>Category One: 74–95 mph</b>": hurricaneLayers.categoryOneLayer,
-	// 	"<b style= 'color:#00FAF4'>Tropical Storm: 39–73 mph</b>": stormLayers.tropicalStormLayer,
-	// 	"<b style= 'color:#5EBAFF'>Tropical Depression: ≤ 38 mph</b>": stormLayers.tropicalDepressionLayer
-	// };
-
-	// var legend = L.control.layers(null, categoryLayer, {
-	// 	collapsed: false,
-	// }).addTo(map);
-
 	drawLegend();
-
-	clickEvent(hurricaneLayers);
 
   }
 
+	//names of storms/hurricanes are all caps in original data file
+	//define function that takes name and formats to only the first letter in caps
   function getName(name) {
     name = name.toLowerCase().split(' ');
     for (var i = 0; i < name.length; i++) {
@@ -262,7 +267,7 @@
       } return name.join(' ');
     };
 
-
+	//define function that looks at coded value for storm category, and translates into value that can be neatly written into popup content
   function getCategory(cat) {
     if (cat == 'H5') {
       return '5'
@@ -281,20 +286,21 @@
     }
   }
 
-	var categoryArray = ["Category Five", "Category Four", "Category Three", "Category Two", "Category One", "Tropical Storm", "Tropical Depression"]
-
+	//wind speed is reported in knots
+	//define function to calculate wind speed in MPH for use in popup content
   function getMPH(kts) {
     var mph = kts*1.15
     return mph.toLocaleString();
   }
 
+	//
 			function drawLegend() {
-	      var legend = L.control.layers({
+	      var legend = L.control({
 	        position: 'bottomright'
 	      });
 	      legend.onAdd = function() {
 	        var div = L.DomUtil.create('div', 'legend');
-	        div.innerHTML = "<h3>Tropical Story Categories</h3>";
+	        div.innerHTML = "<h3>Tropical Storm Categories</h3>";
 
 	        for (var type in layerInfo) {
 
@@ -302,32 +308,19 @@
 
 						var name = layerInfo[type].name
 
+						var windSpeed = layerInfo[type].windSpeed
+
 	          div.innerHTML +=
 	            '<span style="background:' + color + '"></span> ' +
-	            '<label>' + name + '</label>';
+	            '<label>' + name + ", " + windSpeed + '</label>';
 	        }
-
 	        return div
 	      };
 	      legend.addTo(map);
 	    }
 
-			function clickEvent(hurricaneLayers) {
-				map.on('popupopen', function(event) {
-				for (var type in hurricaneLayers) {
-					hurricaneLayers[type].eachLayer(function(layer) {
-						if (layer.BTID == this.BTID) {
-							layer.setStyle({
-								stroke: true
-							});
-						} else {
-							layer.setStyle({
-								stroke: false
-							});
-						}
-					});
-				};
-
+			//cannot figure out how to define a click event on a layer
+				map.on('click', function(event) {
 				for (var type in stormLayers) {
 					stormLayers[type].eachLayer(function(layer) {
 						if (layer.BTID == this.BTID) {
@@ -340,11 +333,10 @@
 							});
 						}
 					});
-				}
+				};
 			});
-		}
 
-		console.log(hurricaneLayers);
+
 
 </script>
 
