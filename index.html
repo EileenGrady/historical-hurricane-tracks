@@ -6,14 +6,14 @@
 	<title>Historical Hurricane Tracks</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
 	<link href="https://fonts.googleapis.com/css?family=Oswald|Quattrocento" rel="stylesheet">
 
 	<style>
 		body {
 			margin: 0;
 			padding: 0;
-			font-family:'Quattrocento', Serif;
+			font-family: 'Quattrocento', Serif;
 			color: #3d3d3d;
 		}
 
@@ -31,11 +31,6 @@
 			border: 1px solid grey;
 			border-radius: 3px;
 			z-index: 800;
-		}
-
-		h2 {
-			font-family: 'Oswald', Sans-Serif;
-			letter-spacing: .04em;
 		}
 
 		#map {
@@ -72,38 +67,38 @@
 		}
 
 		.legend {
-      padding: 10px 15px;
-      font-size: 1em;
-      background: rgba(256, 256, 256, .9);
+			padding: 10px 15px;
+			font-size: 1em;
+			background: rgba(256, 256, 256, .9);
 			border: 1px solid grey;
 			border-radius: 3px;
-    }
+		}
 
-    .legend h3 {
-      font-size: 1.7em;
+		.legend h2 {
+			font-size: 1.7em;
 			font-family: 'Oswald', Sans-Serif;
-      font-weight: bold;
-      color: #001323;
-      margin: 0 0 10px 0;
-    }
+			font-weight: bold;
+			color: #001323;
+			margin: 0 0 10px 0;
+		}
 
-    .legend span {
-      width: 20px;
-      height: 20px;
-      float: left;
-      margin: 0 10px 4px 0;
-    }
+		.legend span {
+			width: 20px;
+			height: 20px;
+			float: left;
+			margin: 0 10px 4px 0;
+		}
 
-    .legend label {
-      font-size: 1.3em;
-			font-family:'Quattrocento', Serif;
-    }
+		.legend label {
+			font-size: 1.3em;
+			font-family: 'Quattrocento', Serif;
+		}
 
-    .legend label:after {
-      content: '';
-      display: block;
-      clear: both;
-    }
+		.legend label:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
 
 		.leaflet-popup {
 			width: 260px;
@@ -112,16 +107,15 @@
 
 		.leaflet-popup-content p {
 			margin: 3px 0;
-			font-family:'Quattrocento', Serif;
+			font-family: 'Quattrocento', Serif;
 			font-size: 1.1em;
 		}
 
 		button {
-		  padding: 5px 5px;
-		  font-size: 1em;
-			font-family:'Oswald', Serif;
+			padding: 5px 5px;
+			font-size: 1em;
+			font-family: 'Oswald', Serif;
 		}
-
 	</style>
 </head>
 
@@ -133,307 +127,299 @@
 
 	<section id="about">
 		<!-- <h2>about this map</h2> -->
-		<p>This map shows historical North/Central American tropical storm and hurricane tracks since 1980 as maintained by the <a href = "https://www.nhc.noaa.gov/" target="_blank">National Hurricane Center at NOAA</a>.
-			Storms are classified according to their wind speed. Tropical depressions and storms are the least severe, but often worsen and become a hurricane.
-			Hurricanes are categorized into five categories according to the <a href = "https://www.nhc.noaa.gov/aboutsshws.php" target = "_blank">Saffir-Simpson Hurricane Wind Scale</a>.
-			Tropical storms are given names to improve communication regarding the storm. Six lists of 22 names, maintained by the <a href = "https://public.wmo.int/en/About-us/FAQs/faqs-tropical-cyclones/tropical-cyclone-naming" target = "_blank">World Meterological Organization</a>, are cycled through with a list being repeated every seventh year.
-			Changes in the list are made in the case of especially devestasting storms, whose names are retired from future use.
+		<p>This map shows historical North/Central American tropical storm and hurricane tracks since 1980 as maintained by the <a href="https://www.nhc.noaa.gov/" target="_blank">National Hurricane Center at NOAA</a>. Storms are classified according to their
+			wind speed. Tropical depressions and storms are the least severe, but often worsen and become a hurricane. Hurricanes are categorized into five categories according to the <a href="https://www.nhc.noaa.gov/aboutsshws.php" target="_blank">Saffir-Simpson Hurricane Wind Scale</a>.
+			Tropical storms are given names to improve communication regarding the storm. Six lists of 22 names, maintained by the <a href="https://public.wmo.int/en/About-us/FAQs/faqs-tropical-cyclones/tropical-cyclone-naming" target="_blank">World Meterological Organization</a>,
+			are cycled through with a list being repeated every seventh year. Changes in the list are made in the case of especially devestasting storms, whose names are retired from future use.
 		</p>
 		<p>Click any segment on the map to explore that storm's entire track, then click the reset button below to view all storms.</p>
 		<p><button id='reset-map'>Reset Map</button></p>
-		<p>Data acquired from <a href="https://www.ncdc.noaa.gov/ibtracs/index.php?name=wmo-data" target = "_blank">NOAA</a>.</p>
-		<p>Map authored by <a href = "https://github.com/EileenGrady" target = "_blank">Eileen Grady</a>.</p>
+		<p>Data acquired from <a href="https://www.ncdc.noaa.gov/ibtracs/index.php?name=wmo-data" target="_blank">NOAA</a>.</p>
+		<p>Map authored by <a href="https://github.com/EileenGrady" target="_blank">Eileen Grady</a>.</p>
 	</section>
 
-  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-<script>
-
-    var map = L.map('map', {
-      center: [30.230627, -100.500799],
-      zoom: 4,
+	<script>
+		var map = L.map('map', {
+			center: [30.230627, -100.500799],
+			zoom: 4,
 			zoomControl: false
-    });
+		});
 
-    var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-	subdomains: 'abcd',
-	maxZoom: 19
-});
+		var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+			subdomains: 'abcd',
+			maxZoom: 19
+		});
 
-      tiles.addTo(map);
+		tiles.addTo(map);
 
-
-//create object to hold properties for each layer that will be created, based on storm severity
-      var hurricaneInfo = {
-        categoryFiveLayer: {
-          category: "H5",
-          color: '#ff4d4d',
-          weight: 3.6,
-					name: "Category Five",
-					windSpeed: "≥ 157 mph"
-        },
-				categoryFourLayer: {
-					category: "H4",
-					color: '#FF8F20',
-					weight: 3.4,
-					name: "Category Four",
-					windSpeed: "130–156 mph"
-				},
-				categoryThreeLayer: {
-          category: "H3",
-          color: '#FFC140',
-          weight: 3.2,
-					name: "Category Three",
-					windSpeed: "111–129 mph"
-        },
-				categoryTwoLayer: {
-					category: "H2",
-					color: '#FFE775',
-					weight: 3,
-					name: "Category Two",
-					windSpeed: "96–110 mph"
-				},
-				categoryOneLayer: {
-					category: "H1",
-					color: '#FFFFCC',
-					weight: 2.8,
-					name: "Category One",
-					windSpeed: "74–95 mph"
-				}
-			};
-
-			var stormInfo = {
-        tropicalStormLayer: {
-          category: "TS",
-          color: '#00FAF4',
-          weight: 2.6,
-					name: "Tropical Storm",
-					windSpeed: "39–73 mph"
-        },
-        tropicalDepressionLayer: {
-          category: "TD",
-          color: '#5EBAFF',
-          weight: 2.4,
-					name: "Tropical Depression",
-					windSpeed: "≤ 38 mph"
-        }
+		//create object to hold properties for each layer that will be created, based on storm severity
+		var hurricaneInfo = {
+			categoryFiveLayer: {
+				category: "H5",
+				color: '#ff4d4d',
+				name: "Category Five",
+				windSpeed: "≥ 157 mph"
+			},
+			categoryFourLayer: {
+				category: "H4",
+				color: '#FF8F20',
+				name: "Category Four",
+				windSpeed: "130–156 mph"
+			},
+			categoryThreeLayer: {
+				category: "H3",
+				color: '#FFC140',
+				name: "Category Three",
+				windSpeed: "111–129 mph"
+			},
+			categoryTwoLayer: {
+				category: "H2",
+				color: '#FFE775',
+				name: "Category Two",
+				windSpeed: "96–110 mph"
+			},
+			categoryOneLayer: {
+				category: "H1",
+				color: '#FFFFCC',
+				name: "Category One",
+				windSpeed: "74–95 mph"
 			}
+		};
 
-//Define AJAX request for each data source, hurricanes and storms
-      var hurricaneRequest = $.getJSON("data/historic-hurricane-tracks.geojson");
-      var stormRequest = $.getJSON("data/historic-tropic-storms.geojson");
-
-//method that calls drawMap function once both data sources are loaded
-      $.when(hurricaneRequest, stormRequest)
-        .done(function(hurricaneData, stormData) {
-          drawMap(hurricaneData[0], stormData[0])
-        });
-
-//empty object to hold all the storm layers
-      var stormLayers = {};
-
-//define function that will draw map (create geojson layer) once data is loaded
-    	function drawMap(hurricaneData, stormData) {
-
-//loop through each layer in layerInfo to start populating stormsLayer using the stormData file (tropical storms and depressions)
-      for(var layer in stormInfo) {
-     	 	stormLayers[layer] = L.geoJson(stormData, {
-					//filter returns only one category of storm at a time to build layers
-					filter: function(feature) {
-						if(feature.properties.CAT == stormInfo[layer].category) {
-							return feature
-						}
-        },
-				//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
-				style: function(feature) {
-          return {
-            color: stormInfo[layer].color,
-            weight: 2.5
-          }
-        },
-				onEachFeature: function(feature, layer) {
-          var props = feature.properties; //shorthand notation to use when building popup content
-          var formatName = getName(props.NAME); //call function to format name, original name format is in all caps
-          var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
-          var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
-					//build popup content using variables defined above
-					var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was classified as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.</p>";
-					layer.bindPopup(popup);
-        }
-      }).addTo(map)
-    };
-
-		//loop through each layer in layerInfo to continue populating stormsLayer using the hurricaneData file (category 1-5 hurricanes)
-	  for(var layer in hurricaneInfo) {
-    stormLayers[layer] = L.geoJson(hurricaneData, {
-			//filter returns only one category of storm at a time to build layers
-			filter: function(feature) {
-        if(feature.properties.CAT == hurricaneInfo[layer].category) {
-          return feature
-        }
-      },
-			//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
-      style: function(feature) {
-        return {
-          color: hurricaneInfo[layer].color,
-          weight: 2.5
-        }
-      },
-      onEachFeature: function(feature, layer) {
-        var props = feature.properties; //shorthand notation to use when building popup content
-        var formatName = getName(props.NAME); //call function to format name, original name format is in all cap
-        var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
-        var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
-				//build popup content using variables defined above
-				var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was a category " + formatCategory + " hurricane with wind speeds of " + windSpeed + " mph.</p>";
-        layer.bindPopup(popup);
-      }
-    }).addTo(map)
-  };
-
-		drawLegend();
-
-		addClickHandlers(stormLayers);
-
-  }
-
-	//names of storms/hurricanes are all caps in original data file
-	//define function that takes name and formats to only the first letter in caps
-  function getName(name) {
-    name = name.toLowerCase().split(' ');
-    for (var i = 0; i < name.length; i++) {
-      name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
-      } return name.join(' ');
-    };
-
-	//define function that looks at coded value for storm category, and translates into value that can be neatly written into popup content
-  function getCategory(cat) {
-    if (cat == 'H5') {
-      return '5'
-    } else if(cat == 'H4') {
-      return '4'
-    } else if (cat == 'H3') {
-      return '3'
-    } else if (cat == 'H2') {
-      return '2'
-    } else if (cat == 'H1') {
-      return '1'
-    } else if (cat == 'TS') {
-      return 'tropical storm'
-    } else if (cat == 'TD') {
-      return 'tropical depression'
-    }
-  }
-
-	//wind speed is reported in knots
-	//define function to calculate wind speed in MPH for use in popup content
-  function getMPH(kts) {
-    var mph = kts*1.15
-    return mph.toLocaleString();
-  }
-
-	//define function to draw legend
-			function drawLegend() {
-	      var legend = L.control({
-	        position: 'topright'
-	      });
-	      legend.onAdd = function() {
-	        var div = L.DomUtil.create('div', 'legend');
-	        div.innerHTML = "<h3>Storm Classification by Wind Speed</h3>"; //title of legend
-
-					//loop through hurricaneInfo first to build legend entries, with color, category name, and wind speed
-	        for (var type in hurricaneInfo) {
-
-	          var color = hurricaneInfo[type].color
-
-						var name = hurricaneInfo[type].name
-
-						var windSpeed = hurricaneInfo[type].windSpeed
-
-	          div.innerHTML +=
-	            '<span style="background:' + color + '"></span> ' +
-	            '<label>' + name + " " + windSpeed + '</label>';
-					}
-
-					//loop through stormInfo next to continue building legend entries
-					for (var type in stormInfo) {
-
-						var color = stormInfo[type].color
-
-						var name = stormInfo[type].name
-
-						var windSpeed = stormInfo[type].windSpeed
-
-						div.innerHTML +=
-							'<span style="background:' + color + '"></span> ' +
-							'<label>' + name + " " + windSpeed + '</label>';
-						}
-
-	        return div
-	      };
-	      legend.addTo(map);
-	    }
-
-			//define function that adds an event when segment feature is clicked on, to show only those segments that make up the total storm track that was clicked on
-			function addClickHandlers(stormLayers) {
-
-				for(var layer in stormLayers) {
-					stormLayers[layer].eachLayer(function(l) {
-						l.on('click', function(evt) {
-							highlightSelected(stormLayers, this); //call this function when a feature is clicked on
-						});
-					})
-				}
+		var stormInfo = {
+			tropicalStormLayer: {
+				category: "TS",
+				color: '#00FAF4',
+				name: "Tropical Storm",
+				windSpeed: "39–73 mph"
+			},
+			tropicalDepressionLayer: {
+				category: "TD",
+				color: '#5EBAFF',
+				name: "Tropical Depression",
+				windSpeed: "≤ 38 mph"
 			}
+		}
 
-			//define function that is called when a feature is clicked on
-			function highlightSelected(stormLayers, layer) {
+		//define AJAX request for each data source, hurricanes and storms
+		var hurricaneRequest = $.getJSON("data/historic-hurricane-tracks.geojson");
+		var stormRequest = $.getJSON("data/historic-tropic-storms.geojson");
 
-				//gets unique storm code from the selected feature
-				var highlightCode = layer.feature.properties.BTID;
-
-				// loop through all layerGroups
-				for(var l in stormLayers) {
-
-					//use onEachFeature to compare the unique storm code of each feature to the unique storm code from the selected feature
-					stormLayers[l].eachLayer(function(l2) {
-						//if unique storm codes match then the feature stroke is set to true and set at weight 8
-						if(l2.feature.properties.BTID === highlightCode) {
-							l2.setStyle({
-								stroke: true,
-								weight: 8
-							}).bringToFront();
-						//if unique storm codes do not match then feature stroke is set to false so it will not be drawn
-						} else {
-							l2.setStyle({
-								stroke: false
-							});
-						}
-					})
-				}
-			}
-
-			//define button that will turn all features back on after one is clicked
-			var button = document.getElementById("reset-map");
-
-			//add the button that responds to a click
-			button.addEventListener("click", function() {
-				resetMap(stormLayers); //call function that turns all features back on when button is clicked
+		//method that calls drawMap function once both data sources are loaded
+		$.when(hurricaneRequest, stormRequest)
+			.done(function(hurricaneData, stormData) {
+				drawMap(hurricaneData[0], stormData[0])
 			});
 
-			//loop through all features and turns stroke back to true and resets weight to original
-			function resetMap(stormLayers) {
-				for(var l in stormLayers) {
-					stormLayers[l].setStyle({
-						stroke: true,
-						weight: 2.5
-					})
-				}
-			}
+		//define empty object to hold all the storm layers
+		var stormLayers = {};
 
-</script>
+		//define function that will draw map (create geojson layer) once data is loaded
+		function drawMap(hurricaneData, stormData) {
+
+			//loop through each layer in layerInfo to start populating stormsLayer using the stormData file (tropical storms and depressions)
+			for (var layer in stormInfo) {
+				stormLayers[layer] = L.geoJson(stormData, {
+					//filter returns only one category of storm at a time to build layers
+					filter: function(feature) {
+						if (feature.properties.CAT == stormInfo[layer].category) {
+							return feature
+						}
+					},
+					//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
+					style: function(feature) {
+						return {
+							color: stormInfo[layer].color,
+							weight: 2.8
+						}
+					},
+					onEachFeature: function(feature, layer) {
+						var props = feature.properties; //shorthand notation to use when building popup content
+						var formatName = getName(props.NAME); //call function to format name, original name format is in all caps
+						var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
+						var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
+						//build popup content using variables defined above
+						var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was classified as a " + formatCategory + " with wind speeds of " + windSpeed +
+							" mph.</p>";
+						layer.bindPopup(popup);
+					}
+				}).addTo(map)
+			};
+
+			//loop through each layer in layerInfo to continue populating stormsLayer using the hurricaneData file (category 1-5 hurricanes)
+			for (var layer in hurricaneInfo) {
+				stormLayers[layer] = L.geoJson(hurricaneData, {
+					//filter returns only one category of storm at a time to build layers
+					filter: function(feature) {
+						if (feature.properties.CAT == hurricaneInfo[layer].category) {
+							return feature
+						}
+					},
+					//style according to properties defined above in layerInfo, differnet colors and weights based on storm severity
+					style: function(feature) {
+						return {
+							color: hurricaneInfo[layer].color,
+							weight: 2.8
+						}
+					},
+					onEachFeature: function(feature, layer) {
+						var props = feature.properties; //shorthand notation to use when building popup content
+						var formatName = getName(props.NAME); //call function to format name, original name format is in all cap
+						var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
+						var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
+						//build popup content using variables defined above
+						var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was a category " + formatCategory + " hurricane with wind speeds of " + windSpeed +
+							" mph.</p>";
+						layer.bindPopup(popup);
+					}
+				}).addTo(map)
+			};
+
+			drawLegend();
+
+			addClickHandlers(stormLayers);
+
+		}
+
+		//names of storms/hurricanes are all caps in original data file
+		//define function that takes name and formats to only the first letter capitalized
+		function getName(name) {
+			name = name.toLowerCase().split(' ');
+			for (var i = 0; i < name.length; i++) {
+				name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
+			}
+			return name.join(' ');
+		};
+
+		//define function that looks at coded value for storm category, and translates into value that can be neatly written into popup content
+		function getCategory(cat) {
+			if (cat == 'H5') {
+				return '5'
+			} else if (cat == 'H4') {
+				return '4'
+			} else if (cat == 'H3') {
+				return '3'
+			} else if (cat == 'H2') {
+				return '2'
+			} else if (cat == 'H1') {
+				return '1'
+			} else if (cat == 'TS') {
+				return 'tropical storm'
+			} else if (cat == 'TD') {
+				return 'tropical depression'
+			}
+		}
+
+		//wind speed is reported in knots
+		//define function to calculate wind speed in MPH for use in popup content
+		function getMPH(kts) {
+			var mph = kts * 1.15
+			return mph.toLocaleString();
+		}
+
+		//define function to draw legend
+		function drawLegend() {
+			var legend = L.control({
+				position: 'topright'
+			});
+			legend.onAdd = function() {
+				var div = L.DomUtil.create('div', 'legend');
+				div.innerHTML = "<h2>Storm Classification by Wind Speed</h2>"; //title of legend
+
+				//loop through hurricaneInfo first to build legend entries, with color, category name, and wind speed
+				for (var type in hurricaneInfo) {
+
+					var color = hurricaneInfo[type].color
+
+					var name = hurricaneInfo[type].name
+
+					var windSpeed = hurricaneInfo[type].windSpeed
+
+					div.innerHTML +=
+						'<span style="background:' + color + '"></span> ' +
+						'<label>' + name + " " + windSpeed + '</label>';
+				}
+
+				//loop through stormInfo next to continue building legend entries
+				for (var type in stormInfo) {
+
+					var color = stormInfo[type].color
+
+					var name = stormInfo[type].name
+
+					var windSpeed = stormInfo[type].windSpeed
+
+					div.innerHTML +=
+						'<span style="background:' + color + '"></span> ' +
+						'<label>' + name + " " + windSpeed + '</label>';
+				}
+
+				return div
+			};
+			legend.addTo(map);
+		}
+
+		//define function that adds an event when segment feature is clicked on, to show only those segments that make up the total storm track that was clicked on
+		function addClickHandlers(stormLayers) {
+
+			for (var layer in stormLayers) {
+				stormLayers[layer].eachLayer(function(l) {
+					l.on('click', function(evt) {
+						highlightSelected(stormLayers, this); //call this function when a feature is clicked on
+					});
+				})
+			}
+		}
+
+		//define function that is called when a feature is clicked on
+		function highlightSelected(stormLayers, layer) {
+
+			//gets unique storm code from the selected feature
+			var highlightCode = layer.feature.properties.BTID;
+
+			// loop through all layerGroups
+			for (var l in stormLayers) {
+
+				//use onEachFeature to compare the unique storm code of each feature to the unique storm code from the selected feature
+				stormLayers[l].eachLayer(function(l2) {
+					//if unique storm codes match then the feature stroke is set to true and set at weight 8
+					if (l2.feature.properties.BTID === highlightCode) {
+						l2.setStyle({
+							stroke: true,
+							weight: 8
+						}).bringToFront();
+						//if unique storm codes do not match then feature stroke is set to false so it will not be drawn
+					} else {
+						l2.setStyle({
+							stroke: false
+						});
+					}
+				})
+			}
+		}
+
+		//define button that will turn all features back on after one is clicked
+		var button = document.getElementById("reset-map");
+
+		//add the button that responds to a click
+		button.addEventListener("click", function() {
+			resetMap(stormLayers); //call function that turns all features back on when button is clicked
+		});
+
+		//loop through all features and turns stroke back to true and resets weight to original
+		function resetMap(stormLayers) {
+			for (var l in stormLayers) {
+				stormLayers[l].setStyle({
+					stroke: true,
+					weight: 2.5
+				})
+			}
+		}
+	</script>
 
 </body>
 
