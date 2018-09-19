@@ -288,11 +288,11 @@
 		//names of storms/hurricanes are all caps in original data file
 		//define function that takes name and formats to only the first letter capitalized
 		function getName(name) {
-			name = name.toLowerCase().split(' ');
+			name = name.toLowerCase().split(' '); //first changes name to all lowercase, and splits into seperate letters
 			for (var i = 0; i < name.length; i++) {
-				name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
+				name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1); //loops through length of name, capitalizing the first letter, and then adding the next letter until all letters are added
 			}
-			return name.join(' ');
+			return name.join(' '); //returns the capitalized first letter rejoined with the rest of the letters
 		};
 
 		//define function that looks at coded value for storm category, and translates into value that can be neatly written into popup content
