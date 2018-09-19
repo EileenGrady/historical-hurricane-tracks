@@ -75,7 +75,6 @@
       padding: 10px 15px;
       font-size: 1em;
       background: rgba(256, 256, 256, .9);
-      /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); */
 			border: 1px solid grey;
 			border-radius: 3px;
     }
@@ -258,7 +257,7 @@
           var formatCategory = getCategory(props.CAT); //call function to format storm category, change coded value to full written out value
           var windSpeed = getMPH(props.WIND_KTS); //call function to change wind speed in knots to mph
 					//build popup content using variables defined above
-					var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was categorized as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.</p>";
+					var popup = "<p>On " + props.MONTH + "/" + props.DAY + "/" + props.YEAR + ", <span style='Oswald Sans-Serif; font-weight: bold'>" + formatName + "</span> was classified as a " + formatCategory + " with wind speeds of " + windSpeed + " mph.</p>";
 					layer.bindPopup(popup);
         }
       }).addTo(map)
@@ -333,15 +332,16 @@
     return mph.toLocaleString();
   }
 
-	//
+	//define function to draw legend
 			function drawLegend() {
 	      var legend = L.control({
 	        position: 'topright'
 	      });
 	      legend.onAdd = function() {
 	        var div = L.DomUtil.create('div', 'legend');
-	        div.innerHTML = "<h3>Storm Classification by Wind Speed</h3>";
+	        div.innerHTML = "<h3>Storm Classification by Wind Speed</h3>"; //title of legend
 
+					//loop through hurricaneInfo first to build legend entries, with color, category name, and wind speed
 	        for (var type in hurricaneInfo) {
 
 	          var color = hurricaneInfo[type].color
@@ -355,6 +355,7 @@
 	            '<label>' + name + " " + windSpeed + '</label>';
 					}
 
+					//loop through stormInfo next to continue building legend entries
 					for (var type in stormInfo) {
 
 						var color = stormInfo[type].color
@@ -373,46 +374,54 @@
 	      legend.addTo(map);
 	    }
 
+			//define function that adds an event when segment feature is clicked on, to show only those segments that make up the total storm track that was clicked on
 			function addClickHandlers(stormLayers) {
 
 				for(var layer in stormLayers) {
 					stormLayers[layer].eachLayer(function(l) {
 						l.on('click', function(evt) {
-							highlightSelected(stormLayers, this);
+							highlightSelected(stormLayers, this); //call this function when a feature is clicked on
 						});
 					})
 				}
 			}
 
+			//define function that is called when a feature is clicked on
 			function highlightSelected(stormLayers, layer) {
-				// get the code from the current select track
+
+				//gets unique storm code from the selected feature
 				var highlightCode = layer.feature.properties.BTID;
 
 				// loop through all layerGroups
 				for(var l in stormLayers) {
 
+					//use onEachFeature to compare the unique storm code of each feature to the unique storm code from the selected feature
 					stormLayers[l].eachLayer(function(l2) {
+						//if unique storm codes match then the feature stroke is set to true and set at weight 8
 						if(l2.feature.properties.BTID === highlightCode) {
 							l2.setStyle({
 								stroke: true,
 								weight: 8
 							}).bringToFront();
+						//if unique storm codes do not match then feature stroke is set to false so it will not be drawn
 						} else {
 							l2.setStyle({
 								stroke: false
 							});
 						}
 					})
-
 				}
 			}
 
+			//define button that will turn all features back on after one is clicked
 			var button = document.getElementById("reset-map");
 
+			//add the button that responds to a click
 			button.addEventListener("click", function() {
-				resetMap(stormLayers);
+				resetMap(stormLayers); //call function that turns all features back on when button is clicked
 			});
 
+			//loop through all features and turns stroke back to true and resets weight to original
 			function resetMap(stormLayers) {
 				for(var l in stormLayers) {
 					stormLayers[l].setStyle({
@@ -421,8 +430,6 @@
 					})
 				}
 			}
-
-
 
 </script>
 
