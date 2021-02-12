@@ -125,7 +125,6 @@
 	<div id='map'></div>
 
 	<section id="about">
-		<!-- <h2>about this map</h2> -->
 		<p>This map shows historical North/Central American tropical storm and hurricane tracks since 1980 as maintained by the <a href="https://www.nhc.noaa.gov/" target="_blank">National Hurricane Center at NOAA</a>. Storms are classified according to their
 			wind speed. Tropical depressions and storms are the least severe, but often worsen and become a hurricane. Hurricanes are categorized into five categories according to the <a href="https://www.nhc.noaa.gov/aboutsshws.php" target="_blank">Saffir-Simpson Hurricane Wind Scale</a>.
 			Tropical storms are given names to improve communication regarding the storm. Six lists of 22 names, maintained by the <a href="https://public.wmo.int/en/About-us/FAQs/faqs-tropical-cyclones/tropical-cyclone-naming" target="_blank">World Meterological Organization</a>,
@@ -138,7 +137,7 @@
 	</section>
 
 	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 	<script>
 		var map = L.map('map', {
@@ -374,30 +373,50 @@
 			}
 		}
 
+		// define empty array to hold all segments of selected hurricane track
+		var tracks = []
+
 		//define function that is called when a feature is clicked on
 		function highlightSelected(stormLayers, layer) {
 
 			//gets unique storm code from the selected feature
 			var highlightCode = layer.feature.properties.BTID;
 
+			// reset tracks to empty for each newly clicked feature
+			tracks = []
+
 			// loop through all layerGroups
 			for (var l in stormLayers) {
 
-				//use onEachFeature to compare the unique storm code of each feature to the unique storm code from the selected feature
+				// use onEachFeature to compare the unique storm code of each feature to the unique storm code from the selected feature
 				stormLayers[l].eachLayer(function(l2) {
-					//if unique storm codes match then the feature stroke is set to true and set at weight 8
+					// if unique storm codes match then the feature stroke is set to true and set at weight 8
 					if (l2.feature.properties.BTID === highlightCode) {
 						l2.setStyle({
 							stroke: true,
 							weight: 8
 						}).bringToFront();
-						//if unique storm codes do not match then feature stroke is set to false so it will not be drawn
+
+						// if feature matches and is set to draw, add to tracks array
+						tracks.push(l2)
+
+						// if unique storm codes do not match then feature stroke is set to false so it will not be drawn
 					} else {
 						l2.setStyle({
 							stroke: false
 						});
-					}
-				})
+					};
+
+
+				});		
+
+				// create feature group out of all segments that make up selected hurricane track
+				trackGroup = L.featureGroup(tracks);
+
+				// fly to bounds of the selected hurricane track, giving enough padding to clear info boxes
+				map.flyToBounds(trackGroup.getBounds(), {
+					padding: [300,150]
+					});	
 			}
 		}
 
@@ -417,6 +436,12 @@
 					weight: 2.5
 				})
 			}
+
+			// reset map to original center and zoom
+			map.flyTo([30.230627, -100.500799], 4, {duration: 0.75})
+
+			// close out any popups
+			map.closePopup()
 		}
 	</script>
 
